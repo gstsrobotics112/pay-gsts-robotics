@@ -184,6 +184,56 @@
             color: #FFFFFF;
         }
 
+        /* Offline/Online Messages */
+        #offline-message {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--error-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        #online-message {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--success-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        #reload-button {
+            background: white;
+            color: var(--error-color);
+            border: none;
+            padding: 8px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        #reload-button:hover {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -192,6 +242,11 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
@@ -208,6 +263,17 @@
     </style>
 </head>
 <body>
+    <!-- Offline Message -->
+    <div id="offline-message">
+        You are currently offline. Please check your internet connection.
+        <button id="reload-button" onclick="window.location.reload()">Reload Page</button>
+    </div>
+
+    <!-- Online Message -->
+    <div id="online-message">
+        You are online now. You can continue with your payment.
+    </div>
+
     <!-- Landing Page -->
     <header id="landingPage">
         <h1>GSTS Robotics Club</h1>
@@ -267,7 +333,7 @@
             </div>
             <div class="input-group">
                 <input type="number" id="amount" placeholder=" " required>
-                <label for="amount">Enter Amount </label>
+                <label for="amount">Enter Amount</label>
                 <span id="amountError" class="error-message"></span>
             </div>
             <button type="button" class="btn" id="payButton" onclick="payWithPaystack()">Pay Now</button>
@@ -304,6 +370,40 @@
                 notification.innerHTML = '';
             }, 5000); // Hide notification after 5 seconds
         }
+
+        // Function to check internet connectivity
+        function checkInternetConnection() {
+            const offlineMessage = document.getElementById('offline-message');
+            const onlineMessage = document.getElementById('online-message');
+
+            if (!navigator.onLine) {
+                // Offline
+                offlineMessage.style.display = 'block';
+                onlineMessage.style.display = 'none';
+            } else {
+                // Online
+                offlineMessage.style.display = 'none';
+                onlineMessage.style.display = 'block';
+
+                // Hide the online message after 3 seconds
+                setTimeout(() => {
+                    onlineMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Event listeners for online/offline events
+        window.addEventListener('online', checkInternetConnection);
+        window.addEventListener('offline', checkInternetConnection);
+
+        // Check connectivity on page load (but don't show messages)
+        window.onload = () => {
+            // Initialize but don't show messages
+            const offlineMessage = document.getElementById('offline-message');
+            const onlineMessage = document.getElementById('online-message');
+            offlineMessage.style.display = 'none';
+            onlineMessage.style.display = 'none';
+        };
 
         // Function to show payment page
         function showPaymentPage() {
@@ -524,4 +624,5 @@
         }
     </script>
 </body>
+</html>
 </html>
