@@ -35,7 +35,7 @@
             color: var(--text-color);
         }
 
-        header, #paymentPage, #confirmationPage {
+        header, #paymentPage, #confirmationPage, #faqSection {
             background-color: var(--card-background);
             padding: 40px;
             border-radius: 15px;
@@ -234,6 +234,46 @@
             color: #b71c1c;
         }
 
+        /* FAQ Section */
+        #faqSection {
+            display: none; /* Hidden by default */
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .faq-question {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .faq-question:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -279,6 +319,7 @@
         <h1>GSTS Robotics Club</h1>
         <p>Welcome to the GSTS Robotics Club Payment Portal. Securely pay for dues, T-Shirts, or the Medics Assistant Bot project using Paystack.</p>
         <button class="btn" onclick="showPaymentPage()">Make a Payment</button>
+        <button class="btn" onclick="showFAQSection()">FAQs</button>
     </header>
 
     <!-- Payment Page -->
@@ -359,6 +400,52 @@
         <button class="btn" onclick="showLandingPage()">Go Back to Home</button>
     </div>
 
+    <!-- FAQ Section -->
+    <div id="faqSection">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(1)">1. How do I make a payment?</div>
+            <div class="faq-answer" id="faqAnswer1">You can make a payment by clicking the "Make a Payment" button on the landing page and filling out the payment form.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(2)">2. What payment methods are accepted?</div>
+            <div class="faq-answer" id="faqAnswer2">We accept payments via mobile money through Paystack.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(3)">3. Can I pay for multiple items at once?</div>
+            <div class="faq-answer" id="faqAnswer3">No, you need to make separate payments for dues, T-Shirts, and other items.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(4)">4. What is the minimum amount for Medics Assistant?</div>
+            <div class="faq-answer" id="faqAnswer4">The minimum amount for Medics Assistant is 50 GHS.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(5)">5. How do I know my payment was successful?</div>
+            <div class="faq-answer" id="faqAnswer5">You will receive a confirmation page and an email receipt after a successful payment.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(6)">6. What if I encounter an error during payment?</div>
+            <div class="faq-answer" id="faqAnswer6">If you encounter an error, please check your internet connection and try again. If the issue persists, contact support.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(7)">7. Can I get a refund?</div>
+            <div class="faq-answer" id="faqAnswer7">Refunds are subject to the club's policy. Please contact support for assistance.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(8)">8. How do I contact support?</div>
+            <div class="faq-answer" id="faqAnswer8">You can contact support via email at support@gstsrobotics.com or call +233-123-456-789.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(9)">9. Is my payment information secure?</div>
+            <div class="faq-answer" id="faqAnswer9">Yes, your payment information is securely processed by Paystack and is not stored on our servers.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(10)">10. Can I pay for someone else?</div>
+            <div class="faq-answer" id="faqAnswer10">Yes, you can pay for someone else by entering their details in the payment form.</div>
+        </div>
+        <button class="btn" onclick="showLandingPage()">Go Back to Home</button>
+    </div>
+
     <script>
         const paystackPublicKey = 'pk_live_dac042f0978575eeb23406a14a0193f046f8859c'; // Replace with your Paystack live key
 
@@ -410,6 +497,7 @@
             document.getElementById("landingPage").style.display = "none";
             document.getElementById("paymentPage").style.display = "block";
             document.getElementById("confirmationPage").style.display = "none";
+            document.getElementById("faqSection").style.display = "none";
             resetForm();
         }
 
@@ -418,6 +506,21 @@
             document.getElementById("landingPage").style.display = "block";
             document.getElementById("paymentPage").style.display = "none";
             document.getElementById("confirmationPage").style.display = "none";
+            document.getElementById("faqSection").style.display = "none";
+        }
+
+        // Function to show FAQ section
+        function showFAQSection() {
+            document.getElementById("landingPage").style.display = "none";
+            document.getElementById("paymentPage").style.display = "none";
+            document.getElementById("confirmationPage").style.display = "none";
+            document.getElementById("faqSection").style.display = "block";
+        }
+
+        // Function to toggle FAQ answers
+        function toggleAnswer(id) {
+            const answer = document.getElementById(`faqAnswer${id}`);
+            answer.classList.toggle('active');
         }
 
         // Function to reset form and clear errors
@@ -592,8 +695,46 @@
                 callback: function(response) {
                     document.getElementById("loadingSpinner").style.display = "none";
                     document.getElementById("payButton").disabled = false;
-                    showNotification("Payment successful! Thank you.", "success");
+
+                    // Log the response for debugging
+                    console.log("Paystack Response:", response);
+
+                    // Show confirmation page immediately
                     showConfirmationPage(response.reference, email, amount, `${firstName} ${lastName}`, paymentType, form, phone, note);
+
+                    // Send receipt to backend
+                    fetch('http://localhost:3000/send-receipt', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: `${firstName} ${lastName}`,
+                            email: email,
+                            form: form,
+                            phone: phone,
+                            note: note,
+                            paymentType: paymentType,
+                            amount: amount,
+                            reference: response.reference,
+                        }),
+                    })
+                    .then(response => {
+                        console.log("Backend Response:", response); // Debugging
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Backend Data:", data); // Debugging
+                        if (data.message === 'Email sent successfully') {
+                            showNotification("Payment successful! Receipt sent to GSTS Robotics.", "success");
+                        } else {
+                            showNotification("Payment successful, but receipt could not be sent. Please contact support.", "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending receipt:', error);
+                        showNotification("Payment successful, but receipt could not be sent. Please contact support.", "error");
+                    });
                 },
                 onClose: function() {
                     document.getElementById("loadingSpinner").style.display = "none";
@@ -606,6 +747,7 @@
 
         // Function to show confirmation page
         function showConfirmationPage(reference, email, amount, name, paymentType, form, phone, note) {
+            console.log("Showing confirmation page..."); // Debugging
             document.getElementById("landingPage").style.display = "none";
             document.getElementById("paymentPage").style.display = "none";
             document.getElementById("confirmationPage").style.display = "block";
@@ -624,5 +766,4 @@
         }
     </script>
 </body>
-</html>
 </html>
