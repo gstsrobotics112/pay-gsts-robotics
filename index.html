@@ -1,769 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSTS Robotics Payment Portal</title>
-    <!-- Paystack Inline Script -->
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <!-- Animate.css for animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Light Theme with Red Accents */
-        :root {
-            --primary-color: #D32F2F; /* Red */
-            --secondary-color: #FF5252; /* Lighter Red */
-            --background-color: #F5F5F5; /* Light Gray */
-            --card-background: #FFFFFF; /* White */
-            --text-color: #333333; /* Dark Gray */
-            --success-color: #4CAF50; /* Green */
-            --error-color: #D32F2F; /* Red */
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robotics Club Executive Vetting</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary: #4361ee;
+--secondary: #3f37c9;
+--accent: #4cc9f0;
+--success: #4ad66d;
+--warning: #f8961e;
+--danger: #f94144;
+--light: #f8f9fa;
+--dark: #212529;
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--background-color);
-            font-family: Arial, sans-serif;
-            color: var(--text-color);
-        }
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
 
-        header, #paymentPage, #confirmationPage, #faqSection {
-            background-color: var(--card-background);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            max-width: 800px;
-            width: 90%;
-            margin: 20px auto;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
+body {
+font-family: 'Poppins', sans-serif;
+background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+min-height: 100vh;
+padding: 2rem;
+color: var(--dark);
+}
 
-        h1, h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
+.container {
+max-width: 1000px;
+margin: 0 auto;
+background: white;
+border-radius: 16px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+animation: fadeIn 0.6s ease-out;
+}
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
-        h2 {
-            font-size: 2rem;
-            font-weight: 500;
-        }
+header {
+background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+color: white;
+padding: 2rem;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: var(--text-color);
-        }
+h1 {
+font-size: 2.2rem;
+font-weight: 700;
+margin-bottom: 0.5rem;
+}
 
-        .btn {
-            background-color: var(--primary-color);
-            color: #FFFFFF;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 10px;
-        }
+.progress-container {
+width: 100%;
+height: 8px;
+background: #e9ecef;
+margin-top: 2rem;
+border-radius: 4px;
+overflow: hidden;
+}
 
-        .btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
-        }
+.progress-bar {
+height: 100%;
+background: var(--accent);
+width: 0%;
+transition: width 0.4s ease;
+}
 
-        .btn:disabled {
-            background-color: #CCCCCC;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+.form-content {
+padding: 2rem;
+}
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+.form-group {
+margin-bottom: 1.5rem;
+}
 
-        .input-group {
-            position: relative;
-        }
+label {
+display: block;
+margin-bottom: 0.5rem;
+font-weight: 500;
+}
 
-        .input-group input, .input-group select, .input-group textarea {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid #DDDDDD;
-            border-radius: 5px;
-            color: var(--text-color);
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
+input, select {
+width: 100%;
+padding: 12px 15px;
+border: 2px solid #e9ecef;
+border-radius: 8px;
+font-size: 1rem;
+transition: all 0.3s;
+}
 
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(211, 47, 47, 0.3);
-        }
+input:focus, select:focus {
+border-color: var(--accent);
+outline: none;
+box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+}
 
-        .input-group label {
-            position: absolute;
-            top: 50%;
-            left: 12px;
-            transform: translateY(-50%);
-            color: #999999;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
+.scoring-table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5rem 0;
+}
 
-        .input-group input:focus ~ label,
-        .input-group input:not(:placeholder-shown) ~ label,
-        .input-group select:focus ~ label,
-        .input-group select:not(:placeholder-shown) ~ label,
-        .input-group textarea:focus ~ label,
-        .input-group textarea:not(:placeholder-shown) ~ label {
-            top: 0;
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            background: var(--card-background);
-            padding: 0 5px;
-        }
+.scoring-table th, .scoring-table td {
+padding: 12px;
+text-align: left;
+border-bottom: 1px solid #e9ecef;
+}
 
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
+.scoring-table th {
+background: var(--primary);
+color: white;
+}
 
-        .loader {
-            border: 4px solid #F3F3F3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
+.score-input {
+width: 80px;
+padding: 10px;
+border: 2px solid #e9ecef;
+border-radius: 8px;
+text-align: center;
+}
 
-        /* Notification System */
-        .notification {
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            font-size: 1rem;
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+.buttons {
+display: flex;
+gap: 1rem;
+margin-top: 2rem;
+}
 
-        .notification.success {
-            background-color: var(--success-color);
-            color: #FFFFFF;
-        }
+.btn {
+padding: 12px 24px;
+border-radius: 8px;
+font-weight: 600;
+cursor: pointer;
+border: none;
+transition: all 0.3s;
+}
 
-        .notification.error {
-            background-color: var(--error-color);
-            color: #FFFFFF;
-        }
+.btn-primary {
+background: var(--success);
+color: white;
+}
 
-        /* Offline/Online Messages */
-        #offline-message {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--error-color);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            animation: slideDown 0.5s ease-out;
-        }
+.btn-secondary {
+background: var(--light);
+color: var(--dark);
+}
 
-        #online-message {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--success-color);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            animation: slideDown 0.5s ease-out;
-        }
+.result-container {
+background: #f8f9fa;
+border-radius: 8px;
+padding: 2rem;
+margin-top: 2rem;
+display: none;
+}
 
-        #reload-button {
-            background: white;
-            color: var(--error-color);
-            border: none;
-            padding: 8px 16px;
-            margin-left: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
+.result-header {
+display: flex;
+justify-content: space-between;
+margin-bottom: 1rem;
+}
 
-        #reload-button:hover {
-            background: #ffebee;
-            color: #b71c1c;
-        }
+.total-score {
+background: var(--primary);
+color: white;
+padding: 8px 16px;
+border-radius: 20px;
+font-weight: 700;
+}
 
-        /* FAQ Section */
-        #faqSection {
-            display: none; /* Hidden by default */
-        }
+.error-message {
+color: var(--danger);
+margin-top: 5px;
+font-size: 0.9rem;
+display: none;
+}
 
-        .faq-item {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .faq-question {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .faq-question:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .faq-answer {
-            display: none;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-color);
-        }
-
-        .faq-answer.active {
-            display: block;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            h2 {
-                font-size: 1.5rem;
-            }
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+input:invalid {
+border-color: var(--danger);
+}
+</style>
 </head>
 <body>
-    <!-- Offline Message -->
-    <div id="offline-message">
-        You are currently offline. Please check your internet connection.
-        <button id="reload-button" onclick="window.location.reload()">Reload Page</button>
-    </div>
+<div class="container">
+<header>
+<h1>Robotics Club Executive Vetting</h1>
+<p>Evaluate candidates for leadership positions</p>
+<div class="progress-container">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+</header>
 
-    <!-- Online Message -->
-    <div id="online-message">
-        You are online now. You can continue with your payment.
-    </div>
+<div class="form-content">
+<div class="form-group">
+<label for="candidateName">Candidate Name</label>
+<input type="text" id="candidateName" required>
+<div class="error-message" id="nameError">Please enter candidate name</div>
+</div>
 
-    <!-- Landing Page -->
-    <header id="landingPage">
-        <h1>GSTS Robotics Club</h1>
-        <p>Welcome to the GSTS Robotics Club Payment Portal. Securely pay for dues, T-Shirts, or the Medics Assistant Bot project using Paystack.</p>
-        <button class="btn" onclick="showPaymentPage()">Make a Payment</button>
-        <button class="btn" onclick="showFAQSection()">FAQs</button>
-    </header>
+<div class="form-group">
+<label for="position">Position</label>
+<select id="position" required>
+<option value="">Select position</option>
+<option value="President">President</option>
+<option value="General Secretary">General Secretary</option>
+<option value="Project Manager">Project Manager</option>
+<option value="Financial Secretary">Financial Secretary</option>
+<option value="Welfare Manager">Welfare Manager</option>
+<option value="Organizer">Organizer</option>
+<option value="Public Relations Officer">Public Relations Officer</option>
+<option value="Media Head">Media Head</option>
+<option value="Dean of Discipline">Dean of Discipline</option>
+</select>
+<div class="error-message" id="positionError">Please select a position</div>
+</div>
 
-    <!-- Payment Page -->
-    <div id="paymentPage" style="display: none;">
-        <h2>Payment Form</h2>
-        <div id="notification"></div> <!-- Notification Container -->
-        <form id="paymentForm">
-            <div class="input-group">
-                <input type="text" id="firstName" placeholder=" " required>
-                <label for="firstName">First Name</label>
-                <span id="firstNameError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <input type="text" id="lastName" placeholder=" " required>
-                <label for="lastName">Last Name</label>
-                <span id="lastNameError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <select id="form" required>
-                    <option value="">Select Form</option>
-                    <option value="1">Form 1</option>
-                    <option value="2">Form 2</option>
-                    <option value="3">Form 3</option>
-                </select>
-                <label for="form">Form</label>
-                <span id="formError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <input type="tel" id="phone" placeholder=" " required>
-                <label for="phone">Phone Number</label>
-                <span id="phoneError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <input type="email" id="email" placeholder=" " required>
-                <label for="email">Email</label>
-                <span id="emailError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <textarea id="note" placeholder=" " rows="3"></textarea>
-                <label for="note">Note (Optional)</label>
-            </div>
-            <div class="input-group">
-                <select id="paymentType" required onchange="updateAmountPlaceholder()">
-                    <option value="" disabled selected>Select Payment Type</option>
-                    <option value="medics">Medics Assistant</option>
-                    <option value="dues">Dues</option>
-                    <option value="tshirt">T-Shirt</option>
-                    <option value="contributions">Regular Contributions</option>
-                </select>
-                <label for="paymentType">Payment Type</label>
-                <span id="paymentTypeError" class="error-message"></span>
-            </div>
-            <div class="input-group">
-                <input type="number" id="amount" placeholder=" " required>
-                <label for="amount">Enter Amount</label>
-                <span id="amountError" class="error-message"></span>
-            </div>
-            <button type="button" class="btn" id="payButton" onclick="payWithPaystack()">Pay Now</button>
-            <button type="button" class="btn" onclick="showLandingPage()">Back</button>
-            <div class="loader" id="loadingSpinner" style="display: none;"></div>
-        </form>
-    </div>
+<div class="form-group">
+<label for="evaluatorName">Evaluator Name</label>
+<input type="text" id="evaluatorName" required>
+<div class="error-message" id="evaluatorError">Please enter evaluator name</div>
+</div>
 
-    <!-- Confirmation Page -->
-    <div id="confirmationPage" style="display: none;">
-        <h2>Payment Confirmation</h2>
-        <div id="confirmationMessage">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody id="confirmationTableBody"></tbody>
-            </table>
-        </div>
-        <button class="btn" onclick="showLandingPage()">Go Back to Home</button>
-    </div>
+<table class="scoring-table">
+<thead>
+<tr>
+<th>Criteria</th>
+<th>Weight</th>
+<th>Score (1-10)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leadership</td>
+<td>25%</td>
+<td>
+<input type="number" class="score-input" id="leadership" min="1" max="10" required>
+<div class="error-message" id="leadershipError">Enter score 1-10</div>
+</td>
+</tr>
+<tr>
+<td>Technical Knowledge</td>
+<td>20%</td>
+<td>
+<input type="number" class="score-input" id="technical" min="1" max="10" required>
+<div class="error-message" id="technicalError">Enter score 1-10</div>
+</td>
+</tr>
+<tr>
+<td>Teamwork</td>
+<td>20%</td>
+<td>
+<input type="number" class="score-input" id="teamwork" min="1" max="10" required>
+<div class="error-message" id="teamworkError">Enter score 1-10</div>
+</td>
+</tr>
+<tr>
+<td>Problem-solving</td>
+<td>20%</td>
+<td>
+<input type="number" class="score-input" id="problemSolving" min="1" max="10" required>
+<div class="error-message" id="problemError">Enter score 1-10</div>
+</td>
+</tr>
+<tr>
+<td>Commitment</td>
+<td>15%</td>
+<td>
+<input type="number" class="score-input" id="commitment" min="1" max="10" required>
+<div class="error-message" id="commitmentError">Enter score 1-10</div>
+</td>
+</tr>
+</tbody>
+</table>
 
-    <!-- FAQ Section -->
-    <div id="faqSection">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(1)">1. How do I make a payment?</div>
-            <div class="faq-answer" id="faqAnswer1">You can make a payment by clicking the "Make a Payment" button on the landing page and filling out the payment form.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(2)">2. What payment methods are accepted?</div>
-            <div class="faq-answer" id="faqAnswer2">We accept payments via mobile money through Paystack.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(3)">3. Can I pay for multiple items at once?</div>
-            <div class="faq-answer" id="faqAnswer3">No, you need to make separate payments for dues, T-Shirts, and other items.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(4)">4. What is the minimum amount for Medics Assistant?</div>
-            <div class="faq-answer" id="faqAnswer4">The minimum amount for Medics Assistant is 50 GHS.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(5)">5. How do I know my payment was successful?</div>
-            <div class="faq-answer" id="faqAnswer5">You will receive a confirmation page and an email receipt after a successful payment.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(6)">6. What if I encounter an error during payment?</div>
-            <div class="faq-answer" id="faqAnswer6">If you encounter an error, please check your internet connection and try again. If the issue persists, contact support.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(7)">7. Can I get a refund?</div>
-            <div class="faq-answer" id="faqAnswer7">Refunds are subject to the club's policy. Please contact support for assistance.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(8)">8. How do I contact support?</div>
-            <div class="faq-answer" id="faqAnswer8">You can contact support via email at support@gstsrobotics.com or call +233-123-456-789.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(9)">9. Is my payment information secure?</div>
-            <div class="faq-answer" id="faqAnswer9">Yes, your payment information is securely processed by Paystack and is not stored on our servers.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(10)">10. Can I pay for someone else?</div>
-            <div class="faq-answer" id="faqAnswer10">Yes, you can pay for someone else by entering their details in the payment form.</div>
-        </div>
-        <button class="btn" onclick="showLandingPage()">Go Back to Home</button>
-    </div>
+<div class="buttons">
+<button class="btn btn-primary" id="calculateBtn">Calculate Score</button>
+<button class="btn btn-secondary" id="resetBtn">Reset Form</button>
+</div>
 
-    <script>
-        const paystackPublicKey = 'pk_live_dac042f0978575eeb23406a14a0193f046f8859c'; // Replace with your Paystack live key
+<div class="result-container" id="resultContainer">
+<div class="result-header">
+<h3>Evaluation Results</h3>
+<div class="total-score" id="totalScore">0%</div>
+</div>
+<p><strong>Candidate:</strong> <span id="resultCandidate"></span></p>
+<p><strong>Position:</strong> <span id="resultPosition"></span></p>
+<p><strong>Evaluator:</strong> <span id="resultEvaluator"></span></p>
+<p><strong>Date:</strong> <span id="resultDate"></span></p>
 
-        // Function to show notifications
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            notification.innerHTML = `<div class="notification ${type}">${message}</div>`;
-            setTimeout(() => {
-                notification.innerHTML = '';
-            }, 5000); // Hide notification after 5 seconds
-        }
+<h4>Score Breakdown</h4>
+<p>Leadership: <span id="breakdownLeadership">0</span>/25</p>
+<p>Technical: <span id="breakdownTechnical">0</span>/20</p>
+<p>Teamwork: <span id="breakdownTeamwork">0</span>/20</p>
+<p>Problem-solving: <span id="breakdownProblemSolving">0</span>/20</p>
+<p>Commitment: <span id="breakdownCommitment">0</span>/15</p>
+</div>
+</div>
+</div>
 
-        // Function to check internet connectivity
-        function checkInternetConnection() {
-            const offlineMessage = document.getElementById('offline-message');
-            const onlineMessage = document.getElementById('online-message');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Form elements
+const form = {
+candidateName: document.getElementById('candidateName'),
+position: document.getElementById('position'),
+evaluatorName: document.getElementById('evaluatorName'),
+leadership: document.getElementById('leadership'),
+technical: document.getElementById('technical'),
+teamwork: document.getElementById('teamwork'),
+problemSolving: document.getElementById('problemSolving'),
+commitment: document.getElementById('commitment'),
+calculateBtn: document.getElementById('calculateBtn'),
+resetBtn: document.getElementById('resetBtn'),
+progressBar: document.getElementById('progressBar')
+};
 
-            if (!navigator.onLine) {
-                // Offline
-                offlineMessage.style.display = 'block';
-                onlineMessage.style.display = 'none';
-            } else {
-                // Online
-                offlineMessage.style.display = 'none';
-                onlineMessage.style.display = 'block';
+// Error messages
+const errors = {
+name: document.getElementById('nameError'),
+position: document.getElementById('positionError'),
+evaluator: document.getElementById('evaluatorError'),
+leadership: document.getElementById('leadershipError'),
+technical: document.getElementById('technicalError'),
+teamwork: document.getElementById('teamworkError'),
+problem: document.getElementById('problemError'),
+commitment: document.getElementById('commitmentError')
+};
 
-                // Hide the online message after 3 seconds
-                setTimeout(() => {
-                    onlineMessage.style.display = 'none';
-                }, 3000);
-            }
-        }
+// Result elements
+const result = {
+container: document.getElementById('resultContainer'),
+candidate: document.getElementById('resultCandidate'),
+position: document.getElementById('resultPosition'),
+evaluator: document.getElementById('resultEvaluator'),
+date: document.getElementById('resultDate'),
+total: document.getElementById('totalScore'),
+leadership: document.getElementById('breakdownLeadership'),
+technical: document.getElementById('breakdownTechnical'),
+teamwork: document.getElementById('breakdownTeamwork'),
+problem: document.getElementById('breakdownProblemSolving'),
+commitment: document.getElementById('breakdownCommitment')
+};
 
-        // Event listeners for online/offline events
-        window.addEventListener('online', checkInternetConnection);
-        window.addEventListener('offline', checkInternetConnection);
+// Track form completion
+function updateProgress() {
+let completed = 0;
+const fields = [
+form.candidateName, form.position, form.evaluatorName,
+form.leadership, form.technical, form.teamwork,
+form.problemSolving, form.commitment
+];
 
-        // Check connectivity on page load (but don't show messages)
-        window.onload = () => {
-            // Initialize but don't show messages
-            const offlineMessage = document.getElementById('offline-message');
-            const onlineMessage = document.getElementById('online-message');
-            offlineMessage.style.display = 'none';
-            onlineMessage.style.display = 'none';
-        };
+fields.forEach(field => {
+if (field.value.trim() !== '') completed++;
+});
 
-        // Function to show payment page
-        function showPaymentPage() {
-            document.getElementById("landingPage").style.display = "none";
-            document.getElementById("paymentPage").style.display = "block";
-            document.getElementById("confirmationPage").style.display = "none";
-            document.getElementById("faqSection").style.display = "none";
-            resetForm();
-        }
+form.progressBar.style.width = `${(completed / fields.length) * 100}%`;
+}
 
-        // Function to show landing page
-        function showLandingPage() {
-            document.getElementById("landingPage").style.display = "block";
-            document.getElementById("paymentPage").style.display = "none";
-            document.getElementById("confirmationPage").style.display = "none";
-            document.getElementById("faqSection").style.display = "none";
-        }
+// Validate all fields
+function validateForm() {
+let isValid = true;
 
-        // Function to show FAQ section
-        function showFAQSection() {
-            document.getElementById("landingPage").style.display = "none";
-            document.getElementById("paymentPage").style.display = "none";
-            document.getElementById("confirmationPage").style.display = "none";
-            document.getElementById("faqSection").style.display = "block";
-        }
+// Validate text fields
+if (!form.candidateName.value.trim()) {
+errors.name.style.display = 'block';
+isValid = false;
+} else {
+errors.name.style.display = 'none';
+}
 
-        // Function to toggle FAQ answers
-        function toggleAnswer(id) {
-            const answer = document.getElementById(`faqAnswer${id}`);
-            answer.classList.toggle('active');
-        }
+if (!form.position.value) {
+errors.position.style.display = 'block';
+isValid = false;
+} else {
+errors.position.style.display = 'none';
+}
 
-        // Function to reset form and clear errors
-        function resetForm() {
-            document.getElementById("paymentForm").reset();
-            clearErrors();
-            updateAmountPlaceholder(); // Reset placeholder
-        }
+if (!form.evaluatorName.value.trim()) {
+errors.evaluator.style.display = 'block';
+isValid = false;
+} else {
+errors.evaluator.style.display = 'none';
+}
 
-        // Function to clear all error messages
-        function clearErrors() {
-            const errorMessages = document.querySelectorAll('.error-message');
-            errorMessages.forEach(error => {
-                error.textContent = '';
-            });
-        }
+// Validate scores
+const scores = [
+{ field: form.leadership, error: errors.leadership },
+{ field: form.technical, error: errors.technical },
+{ field: form.teamwork, error: errors.teamwork },
+{ field: form.problemSolving, error: errors.problem },
+{ field: form.commitment, error: errors.commitment }
+];
 
-        // Function to update amount placeholder based on payment type
-        function updateAmountPlaceholder() {
-            const paymentType = document.getElementById("paymentType").value;
-            const amountInput = document.getElementById("amount");
+scores.forEach(score => {
+if (!score.field.value || score.field.value < 1 || score.field.value > 10) {
+score.error.style.display = 'block';
+isValid = false;
+} else {
+score.error.style.display = 'none';
+}
+});
 
-            switch (paymentType) {
-                case "medics":
-                    amountInput.placeholder = "50 GHS (Minimum)";
-                    break;
-                case "dues":
-                    amountInput.placeholder = "15 GHS (Fixed)";
-                    break;
-                case "tshirt":
-                    amountInput.placeholder = "60 GHS (Fixed)";
-                    break;
-                case "contributions":
-                    amountInput.placeholder = "Enter any amount";
-                    break;
-                default:
-                    amountInput.placeholder = " ";
-            }
-        }
+return isValid;
+}
 
-        // Function to validate form inputs
-        function validateForm() {
-            clearErrors();
-            let isValid = true;
+// Calculate final score
+function calculateScore() {
+if (!validateForm()) return;
 
-            // Validate Payment Type
-            const paymentType = document.getElementById("paymentType").value;
-            if (paymentType === "") {
-                document.getElementById("paymentTypeError").textContent = "Please select a valid payment type.";
-                isValid = false;
-            }
+// Convert scores to percentages of their weights
+const leadership = (form.leadership.value / 10) * 25;
+const technical = (form.technical.value / 10) * 20;
+const teamwork = (form.teamwork.value / 10) * 20;
+const problemSolving = (form.problemSolving.value / 10) * 20;
+const commitment = (form.commitment.value / 10) * 15;
 
-            // Validate First Name
-            const firstName = document.getElementById("firstName").value.trim();
-            if (firstName === "") {
-                document.getElementById("firstNameError").textContent = "First Name is required";
-                isValid = false;
-            }
+// Calculate total percentage
+const totalScore = leadership + technical + teamwork + problemSolving + commitment;
 
-            // Validate Last Name
-            const lastName = document.getElementById("lastName").value.trim();
-            if (lastName === "") {
-                document.getElementById("lastNameError").textContent = "Last Name is required";
-                isValid = false;
-            }
+// Display results
+result.candidate.textContent = form.candidateName.value;
+result.position.textContent = form.position.value;
+result.evaluator.textContent = form.evaluatorName.value;
+result.date.textContent = new Date().toLocaleDateString();
+result.total.textContent = Math.round(totalScore) + '%';
 
-            // Validate Phone Number
-            const phone = document.getElementById("phone").value.trim();
-            if (phone === "") {
-                document.getElementById("phoneError").textContent = "Phone Number is required";
-                isValid = false;
-            } else if (!/^\d+$/.test(phone)) {
-                document.getElementById("phoneError").textContent = "Phone Number must contain only digits";
-                isValid = false;
-            }
+result.leadership.textContent = Math.round(leadership);
+result.technical.textContent = Math.round(technical);
+result.teamwork.textContent = Math.round(teamwork);
+result.problem.textContent = Math.round(problemSolving);
+result.commitment.textContent = Math.round(commitment);
 
-            // Validate Email
-            const email = document.getElementById("email").value.trim();
-            if (email === "") {
-                document.getElementById("emailError").textContent = "Email is required";
-                isValid = false;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                document.getElementById("emailError").textContent = "Invalid Email format";
-                isValid = false;
-            }
+// Show results
+result.container.style.display = 'block';
+result.container.scrollIntoView({ behavior: 'smooth' });
+}
 
-            // Validate Amount
-            const amount = document.getElementById("amount").value;
-            if (amount === "") {
-                document.getElementById("amountError").textContent = "Amount is required";
-                isValid = false;
-            } else if (isNaN(amount) || parseFloat(amount) <= 0) {
-                document.getElementById("amountError").textContent = "Amount must be a valid positive number";
-                isValid = false;
-            }
+// Reset form
+function resetForm() {
+form.candidateName.value = '';
+form.position.value = '';
+form.evaluatorName.value = '';
+form.leadership.value = '';
+form.technical.value = '';
+form.teamwork.value = '';
+form.problemSolving.value = '';
+form.commitment.value = '';
+form.progressBar.style.width = '0%';
+result.container.style.display = 'none';
 
-            // Validate amount based on payment type
-            if (paymentType === "medics" && amount < 50) {
-                document.getElementById("amountError").textContent = "Amount must be 50 GHS or more for Medics Assistant.";
-                isValid = false;
-            }
-            if (paymentType === "dues" && amount !== 15) {
-                document.getElementById("amountError").textContent = "Amount must be exactly 15 GHS for Dues.";
-                isValid = false;
-            }
-            if (paymentType === "tshirt" && amount !== 60) {
-                document.getElementById("amountError").textContent = "Amount must be exactly 60 GHS for T-Shirt.";
-                isValid = false;
-            }
-            if (paymentType === "contributions" && amount < 1) {
-                document.getElementById("amountError").textContent = "Amount must be at least 1 GHS for Regular Contributions.";
-                isValid = false;
-            }
+// Hide all error messages
+Object.values(errors).forEach(error => {
+error.style.display = 'none';
+});
+}
 
-            return isValid;
-        }
+// Event listeners
+form.calculateBtn.addEventListener('click', calculateScore);
+form.resetBtn.addEventListener('click', resetForm);
 
-        // Function to pay with Paystack
-        function payWithPaystack() {
-            if (!validateForm()) {
-                showNotification("Please fix the errors in the form.", "error");
-                return;
-            }
-
-            const firstName = document.getElementById("firstName").value.trim();
-            const lastName = document.getElementById("lastName").value.trim();
-            const form = document.getElementById("form").value;
-            const phone = document.getElementById("phone").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const note = document.getElementById("note").value.trim();
-            const paymentType = document.getElementById("paymentType").value;
-            const amount = parseFloat(document.getElementById("amount").value);
-
-            // Validate amount based on payment type
-            if (paymentType === "medics" && amount < 50) {
-                showNotification("Amount must be 50 GHS or more for Medics Assistant.", "error");
-                return;
-            }
-            if (paymentType === "dues" && amount !== 15) {
-                showNotification("Amount must be exactly 15 GHS for Dues.", "error");
-                return;
-            }
-            if (paymentType === "tshirt" && amount !== 60) {
-                showNotification("Amount must be exactly 60 GHS for T-Shirt.", "error");
-                return;
-            }
-            if (paymentType === "contributions" && amount < 1) {
-                showNotification("Amount must be at least 1 GHS for Regular Contributions.", "error");
-                return;
-            }
-
-            // Show loading spinner
-            document.getElementById("loadingSpinner").style.display = "block";
-            document.getElementById("payButton").disabled = true;
-
-            let handler = PaystackPop.setup({
-                key: paystackPublicKey,
-                email: email,
-                amount: amount * 100, // Convert to kobo
-                currency: "GHS",
-                channels: ['mobile_money'],
-                metadata: {
-                    custom_fields: [
-                        { display_name: "First Name", variable_name: "firstName", value: firstName },
-                        { display_name: "Last Name", variable_name: "lastName", value: lastName },
-                        { display_name: "Form", variable_name: "form", value: form },
-                        { display_name: "Phone", variable_name: "phone", value: phone },
-                        { display_name: "Note", variable_name: "note", value: note },
-                        { display_name: "Payment Type", variable_name: "paymentType", value: paymentType }
-                    ]
-                },
-                callback: function(response) {
-                    document.getElementById("loadingSpinner").style.display = "none";
-                    document.getElementById("payButton").disabled = false;
-
-                    // Log the response for debugging
-                    console.log("Paystack Response:", response);
-
-                    // Show confirmation page immediately
-                    showConfirmationPage(response.reference, email, amount, `${firstName} ${lastName}`, paymentType, form, phone, note);
-
-                    // Send receipt to backend
-                    fetch('http://localhost:3000/send-receipt', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            name: `${firstName} ${lastName}`,
-                            email: email,
-                            form: form,
-                            phone: phone,
-                            note: note,
-                            paymentType: paymentType,
-                            amount: amount,
-                            reference: response.reference,
-                        }),
-                    })
-                    .then(response => {
-                        console.log("Backend Response:", response); // Debugging
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Backend Data:", data); // Debugging
-                        if (data.message === 'Email sent successfully') {
-                            showNotification("Payment successful! Receipt sent to GSTS Robotics.", "success");
-                        } else {
-                            showNotification("Payment successful, but receipt could not be sent. Please contact support.", "error");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error sending receipt:', error);
-                        showNotification("Payment successful, but receipt could not be sent. Please contact support.", "error");
-                    });
-                },
-                onClose: function() {
-                    document.getElementById("loadingSpinner").style.display = "none";
-                    document.getElementById("payButton").disabled = false;
-                    showNotification("Transaction was not completed. Please try again.", "error");
-                }
-            });
-            handler.openIframe();
-        }
-
-        // Function to show confirmation page
-        function showConfirmationPage(reference, email, amount, name, paymentType, form, phone, note) {
-            console.log("Showing confirmation page..."); // Debugging
-            document.getElementById("landingPage").style.display = "none";
-            document.getElementById("paymentPage").style.display = "none";
-            document.getElementById("confirmationPage").style.display = "block";
-
-            const tableBody = document.getElementById("confirmationTableBody");
-            tableBody.innerHTML = `
-                <tr><td>Name</td><td>${name}</td></tr>
-                <tr><td>Email</td><td>${email}</td></tr>
-                <tr><td>Form</td><td>Form ${form}</td></tr>
-                <tr><td>Phone</td><td>${phone}</td></tr>
-                <tr><td>Note</td><td>${note || 'N/A'}</td></tr>
-                <tr><td>Payment Type</td><td>${paymentType}</td></tr>
-                <tr><td>Amount</td><td>${amount} GHS</td></tr>
-                <tr><td>Reference</td><td>${reference}</td></tr>
-            `;
-        }
-    </script>
+// Update progress as user types
+const allInputs = document.querySelectorAll('input, select');
+allInputs.forEach(input => {
+input.addEventListener('input', updateProgress);
+});
+});
+</script>
 </body>
 </html>
